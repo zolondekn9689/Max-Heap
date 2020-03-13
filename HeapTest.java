@@ -8,38 +8,99 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HeapTest
 {
-    Heap heap = new Heap();
+    private Heap heap = new Heap();
 
 
     @org.junit.jupiter.api.Test
     void enqueue()
     {
 
-        heap.enqueue(4);
-        heap.enqueue(5);
-        heap.enqueue(56);
-        heap.enqueue(7);
-        heap.enqueue(23);
-        heap.enqueue(10);
-        heap.enqueue(2);
-        heap.enqueue(1);
+        int testCases = 40000000;
+        Random random = new Random();
+        for (int test = 0 ; test < testCases; test++)
+        {
+            int length = random.nextInt(3040);
+            for (int i = 0; i < length; i++)
+            {
+                heap.enqueue(i);
+
+            }
 
 
-        assertEquals(56, heap.list.get(0));
+
+            for (int i = 0; i < heap.list.size(); i++)
+            {
+
+                //System.out.println("Parent = " + heap.list.get(i));
+                for (int j = 2 * i + 1; j < (2*i + 3); j++)
+                {
+                    if (j >= heap.size()) {
+                        return;
+                    }
+                    //Check to see if it satisfies property 1.
+                    assertEquals(true, heap.list.get(i) > heap.list.get(j));
+
+                }
+            }
+        }
+
+
+
     }
+
+    @org.junit.jupiter.api.Test
+    void testEnqueue2()
+    {
+        heap.enqueue(4);
+        assertEquals(4, heap.list.get(0));
+
+
+        heap.enqueue(5);
+        assertEquals(5, heap.list.get(0));
+        assertEquals(4, heap.list.get(1));
+
+        heap.enqueue(6);
+        assertEquals(6, heap.list.get(0));
+        assertEquals(5, heap.list.get(2));
+        assertEquals(4, heap.list.get(1));
+
+        heap.enqueue(7);
+        assertEquals(7, heap.list.get(0));
+        assertEquals(6, heap.list.get(1));
+        assertEquals(5, heap.list.get(2));
+        assertEquals(4, heap.list.get(3));
+
+        heap.enqueue(3);
+        assertEquals(7, heap.list.get(0));
+        assertEquals(6, heap.list.get(1));
+        assertEquals(5, heap.list.get(2));
+        assertEquals(4, heap.list.get(3));
+        assertEquals(3, heap.list.get(4));
+    }
+
 
     @org.junit.jupiter.api.Test
     void dequeue()
     {
+        int numTestCases = 3000;
 
-        for (int i = 0; i < 10; i++)
+        Random random = new Random();
+
+        for (int test = 0; test < numTestCases; test++)
         {
-            heap.enqueue(10 - i);
+
+            int size = random.nextInt(3000);
+            for (int i = 0; i < size; i++)
+            {
+                heap.enqueue(size - i);
+            }
+
+            for (int i = 0; i < size; i++) {
+                assertEquals(size - i, heap.dequeue());
+            }
+
         }
 
-        for (int i = 0; i < 10; i++) {
-            assertEquals(10 - i, heap.dequeue());
-        }
 
     }
 
@@ -67,6 +128,10 @@ class HeapTest
         ArrayList<Integer> mockList1 = copy(list1);
 
         heap.heapSort(list1);
+        for (int i = 0; i < list1.size(); i++)
+        {
+            System.out.println(list1.get(i));
+        }
         doesMatch(mockList1, list1);
 
         //Test 2:
@@ -86,6 +151,17 @@ class HeapTest
         ArrayList<Integer> mockList4 = copy(list4);
         heap.heapSort(list4);
         doesMatch(mockList4, list4);
+
+        //Tests 5-34.
+        int testCases = 300;
+        Random random = new Random();
+        for (int i = 0; i < testCases; i++)
+        {
+            ArrayList<Integer> list5 = getRandomList(testCases*random.nextInt(40));
+            ArrayList<Integer> mockList5 = copy(list5);
+            heap.heapSort(list5);
+            doesMatch(mockList5, list5);
+        }
 
     }
 
@@ -144,10 +220,19 @@ class HeapTest
         for (int i = 0; i < expected.size(); i++)
         {
             System.out.println("Actual = " + actual.get(i) + "\tExpected: " + expected.get(i));
-            //assertEquals(expected.get(i), actual.get(i));
+            assertEquals(expected.get(i), actual.get(i));
         }
         System.out.println("--------------------");
         System.out.println();
     }
+
+    public boolean isLeaf(int position)
+    {
+        System.out.println(Math.floor(Math.log(heap.size())/Math.log(2) + 1));
+        return true;
+    }
+
+
+
 
 }

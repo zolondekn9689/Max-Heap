@@ -10,8 +10,9 @@ public class Heap
 
     /**
      * Data will be stored in the arraylist.
+     * Note: For using HeapTest, change to public.
      */
-    public ArrayList<Integer> list;
+    private ArrayList<Integer> list;
 
     /**
      * Constructor to build the heap and the arraylist.
@@ -89,7 +90,7 @@ public class Heap
         int root = list.get(0);
 
         // Re
-        while ((list.get(currentSpot) != root) && (list.get(currentSpot) > list.get(parent))) {
+        while ((currentSpot != 0) && (list.get(currentSpot) > list.get(parent))) {
             swap(currentSpot, parent);
             currentSpot = parent;
             parent = (currentSpot - 1)/2;
