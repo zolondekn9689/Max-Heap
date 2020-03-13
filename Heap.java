@@ -16,7 +16,8 @@ public class Heap
     /**
      * Constructor to build the heap and the arraylist.
      */
-    public Heap() {
+    public Heap()
+    {
         list = new ArrayList<>();
     }
 
@@ -27,14 +28,19 @@ public class Heap
      */
     public void enqueue(int entry)
     {
+        //Index of the will-be inserted entry.
         int index = list.size();
+
+        //Add entry to the list.
         list.add(entry);
+
+        //Reheapify it.
         reheapifyUp(index);
     }
 
 
     /**
-     *
+     * Remove an element from the list.
      * @return the highest element from the list.
      */
     public int dequeue()
@@ -76,10 +82,13 @@ public class Heap
      */
     private void reheapifyUp(int currentSpot)
     {
+        // Get parent position.
         int parent = (currentSpot - 1)/2;
 
+        // Get the root element from the arraylist.
         int root = list.get(0);
 
+        // Re
         while ((list.get(currentSpot) != root) && (list.get(currentSpot) > list.get(parent))) {
             swap(currentSpot, parent);
             currentSpot = parent;
@@ -88,15 +97,25 @@ public class Heap
 
     }
 
+    /**
+     * Precondition: currentSpot is the index in list ArrayList of element to reheapify
+     * Postcondition: The heap properties are restored.
+     * Reshapes the current spot and below.
+     * @param currentSpot spot that you would want to readjust.
+     */
     private void reheapifyDown(int currentSpot)
     {
+        //get indexs of left and right child.
         int leftChild = currentSpot * 2 + 1;
         int rightChild = currentSpot * 2 + 2;
 
-        while (leftChild < list.size())
+        // while not at a leaf node.
+        while (leftChild < size())
         {
+            //store the largest index.
             int largest;
 
+            // Find the largest value from either left child or right child.
             if (rightChild < list.size() && list.get(leftChild) < list.get(rightChild))
                 largest = rightChild;
             else
@@ -104,12 +123,13 @@ public class Heap
             if (list.get(currentSpot) >= list.get(largest))
                 break;
 
-            int temp = list.get(currentSpot);
-            list.set(currentSpot,list.get(largest));
-            list.set(largest, temp);
+            //Swap the current spot and largest child elements.
+            swap(currentSpot, largest);
 
-
+            //Reset current spot.
             currentSpot = largest;
+
+            //Children indices.
             leftChild = currentSpot*2 + 1;
             rightChild = currentSpot*2 + 2;
         }
@@ -117,35 +137,55 @@ public class Heap
     }
 
 
+    /**
+     * Sort an arraylist data
+     * @param data desired list to be sorted.
+     */
     public void heapSort(ArrayList<Integer> data)
     {
+        //save the heap as data.
         list = data;
-        for (int i = 0; i < list.size(); i++)
+
+        //convert list to a heap structure.
+        for (int i = 0; i < size(); i++)
         {
             reheapifyUp(i);
         }
 
-        int unsorted = list.size();
+        //Set the number of unsorted elements in the list.
+        int unsorted = size();
 
+        //Sort each list individually.
         while (unsorted > 1)
         {
-            swap(0, unsorted - 1);
+            int temp = list.get(0);
+            list.set(0, list.get(unsorted - 1));
+            data.set(unsorted - 1, temp);
+            //swap(0, unsorted - 1);
             partialReheapifyDown(0, unsorted - 1);
             unsorted--;
         }
     }
 
 
-
+    /**
+     * ReheapifyDown with a stop feature.
+     * @param currentSpot starts at current spot
+     * @param stop reheaps down to stop posiion.
+     */
     private void partialReheapifyDown(int currentSpot, int stop)
     {
+        //get indexs of left and right child.
         int leftChild = currentSpot * 2 + 1;
         int rightChild = currentSpot * 2 + 2;
 
-
+        // while not at a leaf node.
         while (leftChild < stop)
         {
+            //store the largest index.
             int largest;
+
+            // Find the largest value from either left child or right child.
             if (rightChild < stop && list.get(leftChild) < list.get(rightChild))
                 largest = rightChild;
             else
@@ -153,17 +193,23 @@ public class Heap
             if (list.get(currentSpot) >= list.get(largest))
                 break;
 
-            int temp = list.get(currentSpot);
-            list.set(currentSpot,list.get(largest));
-            list.set(largest, temp);
+            //Swap the current spot and largest child elements.
+            swap(currentSpot, largest);
 
+            //Reset current spot.
             currentSpot = largest;
-            leftChild = currentSpot*2 + 1;
-            rightChild = currentSpot*2 + 2;
+
+            //Children indices.
+            leftChild = (currentSpot * 2) + 1;
+            rightChild = (currentSpot * 2) + 2;
         }
     }
 
-
+    /**
+     * Simple method to swap between two positions in the heap.
+     * @param pos1 position 1.
+     * @param pos2 position 2.
+     */
     private void swap(int pos1, int pos2)
     {
         int temp = list.get(pos1);
